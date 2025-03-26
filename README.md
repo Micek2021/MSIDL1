@@ -11,8 +11,8 @@
 
 1. Clone the repository:
    ```bash
-   git clone [URL_DO_REPO]
-   cd [NAZWA_REPO]
+   git clone [https://github.com/Micek2021/MSIDL1.git]
+   cd [MSIDL1]
    ```
 2. Create and activate a virtual environment:
    ```bash
