@@ -12,7 +12,7 @@ def load_data(file_path: str) -> pd.DataFrame:
 
 
 def calculate_numeric_stats(df: pd.DataFrame) -> pd.DataFrame:
-    numeric_stats = df.select_dtypes(include=["number"])
+    numeric_stats = df.select_dtypes(include=["number"]).drop(columns=["sofifa_id"], errors="ignore")
     stats = {
         "mean": numeric_stats.mean(),
         "median": numeric_stats.median(),
@@ -28,15 +28,34 @@ def calculate_numeric_stats(df: pd.DataFrame) -> pd.DataFrame:
 
 def calculate_categorical_stats(df: pd.DataFrame) -> pd.DataFrame:
     categorical_stats = df.select_dtypes(include=["object", "category"])
+
     stats = {
         "unique": categorical_stats.nunique(),
         "missing": categorical_stats.isnull().sum(),
-        "class_proportion": categorical_stats.apply(lambda x: x.value_counts(normalize=True).to_dict())
+        "class_proportion": categorical_stats.apply(
+            lambda x: "; ".join([f"{k}: {v * 100:.2f}%" for k, v in x.value_counts(normalize=True).items()])
+        )
     }
-    return pd.DataFrame(stats)
+    stats_df = pd.DataFrame(stats)
 
+    proportions_dir = os.path.join("Data", "categorical_proportions")
+    os.makedirs(proportions_dir, exist_ok=True)
+
+    for column in categorical_stats.columns:
+        proportions = categorical_stats[column].value_counts(normalize=True).mul(100).round(2).reset_index()
+        proportions.columns = ["class", "proportion (%)"]
+
+        counts = categorical_stats[column].value_counts().reset_index()
+        counts.columns = ["class", "count"]
+
+        proportions = pd.merge(proportions, counts, on="class")
+
+        proportions.to_csv(os.path.join(proportions_dir, f"{column}_proportions.csv"), index=False)
+
+    return stats_df
 
 if __name__ == '__main__':
+    os.makedirs("Data", exist_ok=True)
     data = load_data('Data/players_22.csv')
 
     numeric_stats = calculate_numeric_stats(data)
@@ -45,4 +64,4 @@ if __name__ == '__main__':
     numeric_stats.to_csv('Data/numeric_stats.csv')
     categorical_stats.to_csv('Data/categorical_stats.csv')
 
-    print("Statystyki zapisane do plików CSV.")
+    print("Done.")

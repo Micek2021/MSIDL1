@@ -11,8 +11,8 @@
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/Micek2021/MSIDL1.git]
-   cd [MSIDL1]
+   git clone https://github.com/Micek2021/MSIDL1.git
+   cd MSIDL1
    ```
 2. Create and activate a virtual environment:
    ```bash
@@ -35,17 +35,66 @@
 ### Running the analysis:
 
 To execute the main script, run:
-
 ```bash
 python Scripts/data_analysis_main.py
+```
+
+To generate boxplots and violinplots, run:
+```bash
+python Scripts/box_and_violin_analysis.py
+```
+
+To generate conditional histograms, run:
+```bash
+python Scripts/conditional_histogram_analysis.py
+```
+
+To generate error bars, run:
+```bash
+python Scripts/error_bars_analysis.py
+```
+
+To generate a heatmap of correlations, run:
+```bash
+python Scripts/heatmap_analysis.py
+```
+
+To generate linear regression analysis, run:
+```bash
+python Scripts/regression_analysis.py
+```
+
+To generate histograms, run:
+```bash
+python Scripts/histogram_analysis.py
 ```
 
 ### Output:
 
 The script will generate:
 
-- **Numeric statistics**: `Data/numeric_stats.csv`
-- **Categorical statistics**: `Data/categorical_stats.csv`
+- **Numeric statistics**: `Data/numeric_stats.csv`  
+  *Mean, median, min/max, percentiles, missing values for numerical features*.
+
+- **Categorical statistics**: `Data/categorical_stats.csv`  
+  *Number of unique classes, missing values, and class proportions in text format*.
+
+- **Detailed categorical proportions**:  
+  *CSV files for each categorical feature stored in `Data/categorical_proportions/`, containing:*
+  - Percentage share of classes (e.g., `nationality_name_proportions.csv`),
+  - Absolute class frequencies.
+
+- **Boxplots & Violinplots**: PNG files stored in `Data/plots/`, representing selected numerical features.
+
+- **Conditional histograms**: PNG files visualizing distributions by categorical attributes.
+
+- **Error bars**: PNG files showing confidence intervals for numeric features by position.
+
+- **Correlation heatmap**: PNG file showing relationships between selected numerical attributes.
+
+- **Linear regression plots**: PNG file (`regression_analysis.png`) showing regression lines for selected feature pairs.
+
+- **Histograms**: PNG files for selected numerical attributes stored in `Data/plots/`.
 
 ---
 
@@ -57,12 +106,30 @@ MSIDL1/
 │   ├── numeric_stats.csv
 │   ├── categorical_stats.csv
 │   ├── players_22.csv
+│   ├── plots/
+│   │   ├── boxplot_overall.png
+│   │   ├── violinplot_overall.png
+│   │   ├── conditional_histogram_overall.png
+│   │   ├── error_bars_overall.png
+│   │   ├── correlation_heatmap.png
+│   │   ├── regression_analysis.png
+│   │   ├── histogram_overall.png
+│   │   └── ...
+│   └── categorical_proportions/
+│       ├── nationality_proportions.csv
+│       ├── position_proportions.csv
+│       └── ... (files for other features)
 │
 │── Scripts/
 │   ├── data_analysis_main.py
-│
-│── venv/
+│   ├── box_and_violin_analysis.py
+│   ├── conditional_histogram_analysis.py
+│   ├── error_bars_analysis.py
+│   ├── heatmap_analysis.py
+│   ├── regression_analysis.py
+│   ├── histogram_analysis.py
 │── requirements.txt
+│── venv/
 │── README.md
 ```
 
@@ -72,7 +139,5 @@ MSIDL1/
 
 - Ensure that `players_22.csv` is correctly placed before running the script.
 - If running on Windows, use `venv\Scripts\activate` instead of `source venv/bin/activate`.
-- Modify the `[URL_DO_REPO]` placeholder to include the actual repository URL before sharing.
-
-
+- Generated output files are stored in the `Data/` directory.
 
